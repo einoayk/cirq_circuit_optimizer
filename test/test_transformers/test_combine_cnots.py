@@ -1,9 +1,7 @@
 import unittest
 import cirq
-
-from src.generate_random_circuits.circuit_generator import add_cnots_with_different_targets
+from src.generate_random_circuits.circuit_generator import random_circuit
 from src.transformers.transformers import combine_cnots
-
 
 class TestCombineCnots(unittest.TestCase):
 
@@ -19,8 +17,7 @@ class TestCombineCnots(unittest.TestCase):
 
         op = op.controlled_by(qubits[0])
         expected_circuit.append(op)
-        if circuit != expected_circuit:
-            self.fail("Combine CNOTs doesn't behave as expected")
+        self.assertEqual(circuit, expected_circuit)
 
     def test_multiple_instances(self):
         qubits = cirq.LineQubit.range(7)
@@ -50,8 +47,16 @@ class TestCombineCnots(unittest.TestCase):
         expected_circuit.append(op1)
         expected_circuit.append(op2)
         expected_circuit.append(op3)
-        if circuit != expected_circuit:
-            self.fail("Combine CNOTs doesn't behave as expected")   
+        self.assertEqual(circuit, expected_circuit) 
+
+    def test_does_not_change_effect_of_circuit(self):
+        n_qubits = 5
+        n_templates = 30
+        circuit = random_circuit(n_qubits, n_templates)
+        expected_circuit = circuit.unfreeze(copy=True)
+        circuit = combine_cnots(circuit)
+        cirq.testing.assert_circuits_with_terminal_measurements_are_equivalent(actual=circuit, 
+                                                                               reference=expected_circuit) 
 
 if __name__ == '__main__':
     unittest.main()

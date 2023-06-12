@@ -2,7 +2,7 @@ import unittest
 import cirq
 from cirq.circuits import InsertStrategy
 
-from src.generate_random_circuits.circuit_generator import add_cnots_with_different_targets
+from src.generate_random_circuits.circuit_generator import random_circuit
 from src.transformers.transformers import cnot_to_hadamards_and_cnot
 
 class TestCnotToHadamardsAndCnot(unittest.TestCase):
@@ -16,8 +16,7 @@ class TestCnotToHadamardsAndCnot(unittest.TestCase):
         expected_circuit.append([cirq.H(qubits[0]), cirq.H(qubits[1])])
         expected_circuit.append(cirq.CNOT(qubits[1], qubits[0]))
         expected_circuit.append([cirq.H(qubits[0]), cirq.H(qubits[1])])
-        if circuit != expected_circuit:
-            self.fail("cnot_to_hadamards_and_cnot doesn't behave as expected")
+        self.assertEqual(circuit, expected_circuit)
 
     def test_multiple_instances(self):
         qubits = cirq.LineQubit.range(5)
@@ -30,8 +29,16 @@ class TestCnotToHadamardsAndCnot(unittest.TestCase):
             expected_circuit.append(cirq.CNOT(qubits[i+1], qubits[i]), strategy=InsertStrategy.INLINE)
             expected_circuit.append([cirq.H(qubits[i]), cirq.H(qubits[i+1])], strategy=InsertStrategy.INLINE)
             
-        if circuit != expected_circuit:
-            self.fail("cnot_to_hadamards_and_cnot doesn't behave as expected")
+        self.assertEqual(circuit, expected_circuit)
+
+    def test_does_not_change_effect_of_circuit(self):
+        n_qubits = 5
+        n_templates = 30
+        circuit = random_circuit(n_qubits, n_templates)
+        expected_circuit = circuit.unfreeze(copy=True)
+        circuit = cnot_to_hadamards_and_cnot(circuit)
+        cirq.testing.assert_circuits_with_terminal_measurements_are_equivalent(actual=circuit, 
+                                                                               reference=expected_circuit)
 
 if __name__ == '__main__':
     unittest.main()

@@ -2,8 +2,8 @@ import unittest
 import cirq
 from cirq.circuits import InsertStrategy
 import random
+from src.generate_random_circuits.circuit_generator import random_circuit
 from src.transformers.transformers import combine_cnots_with_controls_surrounded_by_hadamards
-
 
 class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
 
@@ -23,8 +23,7 @@ class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
         op = op.controlled_by(qubits[4])
         expected_circuit.append(op)
         expected_circuit.append(cirq.H(qubits[4]))
-        if circuit != expected_circuit:
-            self.fail("combine_cnots_with_controls_surrounded_by_hadamards doesn't behave as expected")
+        self.assertEqual(circuit, expected_circuit)
 
     def test_multiple_instances(self):
         n_qubits = 7
@@ -51,8 +50,16 @@ class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
             expected_circuit.append(cirq.H(qubits[target_qubit_ind]), strategy=InsertStrategy.NEW_THEN_INLINE)
             
         circuit = combine_cnots_with_controls_surrounded_by_hadamards(circuit)
-        if circuit != expected_circuit:
-            self.fail("combine_cnots_with_controls_surrounded_by_hadamards doesn't behave as expected")
+        self.assertEqual(circuit, expected_circuit)
+
+    def test_does_not_change_effect_of_circuit(self):
+        n_qubits = 5
+        n_templates = 30
+        circuit = random_circuit(n_qubits, n_templates)
+        expected_circuit = circuit.unfreeze(copy=True)
+        circuit = combine_cnots_with_controls_surrounded_by_hadamards(circuit)
+        cirq.testing.assert_circuits_with_terminal_measurements_are_equivalent(actual=circuit, 
+                                                                               reference=expected_circuit)
 
 if __name__ == '__main__':
     unittest.main()
