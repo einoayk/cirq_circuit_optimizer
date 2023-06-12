@@ -1,6 +1,6 @@
 # Optimizing quantum circuits using Transformers in Cirq
 
-#### This project was done as a part of Aalto University's course Practical Quantum Computing in spring/summer 2023. The problem description is the following:
+#### This project was done as a part of Aalto University's course called Practical Quantum Computing during spring/summer of 2023. The problem description is the following:
 
 Quantum circuit optimisation using template-based rewrite rules is widely used in quantum circuit software (e.g. Google Cirq, IBM Qiskit). An input circuit is gradually transformed by applying quantum gate identities until a given optimization criterion is met. The gate set and the size of the input circuits influence the performance of the procedure. The number of permitted transformations blows up the size of the optimisation search space. Consequently, although this kind of optimisation performs well, it is challenging to improve its scaling.
 The goal of this project is to implement a set of functionalities (which we will call transformers) that apply a given set of template-based rewrite rules to randomly generated quantum circuits in all locations of the circuit that permit it. There should be six circuit transformers in total, one for each of the following circuit identities:
@@ -32,7 +32,7 @@ src/generate_random_circuits/circuit_generator.py includes a function called ran
 
 ### Transformers
 
-The transformers are implemented as functions in src\transformers\transformers.py. Link to Cirq transformer documentation: https://quantumai.google/cirq/transform/custom_transformers
+The transformers are implemented as functions in src\transformers\transformers.py. Link to the Cirq transformer documentation: https://quantumai.google/cirq/transform/custom_transformers
 
 ### Optimizer
 
