@@ -24,10 +24,35 @@ Note that the templates above are invariant to qubit permutations or orderings. 
     <li>Full points: C</li>
 </ol>
 
+# Documentation
+
+### Generating random circuits
+
+src/generate_random_circuits/circuit_generator.py includes a function called random_circuit which takes as input the number of qubits (n_qubits) and the number of random templates added to the circuit (n_templates). The templates are the circuits on the left hand side of the circuit identities in the problem statement. The function creates a Cirq circuit with the specified number of qubits and for the specified number of times it selects one of the templates at random and appends it to the end of the circuit. The qubits that are acted on in each new template are chosen randomly. Also the number of CNOT-gates in template a and d are randomly chosen.
+
+### Transformers
+
+The transformers are implemented as functions in src\transformers\transformers.py. Link to Cirq transformer documentation: https://quantumai.google/cirq/transform/custom_transformers
+
+### Optimizer
+
+src/optimizer/optimizer.py includes a function called optimize which optimizes Cirq circuits. It creates multiple optimized circuits and outputs the best one (shortest). For each optimized circuit it randomly selects transformers with specified probability distributions and applies them on the circuit being optimized. The probability distribution for choosing the initial transformer is specified by initial_probs and after that the probability distributions are specified by a two dimensional array called transition_probs. It contains a row for each previously applied transformer containing the probability distribution for choosing the next one. Currently all the initial_probs and transition probs are equal, except the probability for choosing the same transformer two times in a row is zero. The next step could be finding out good probability distributions for the optimizer.  
+
+
+### Results
+
+See src/notebooks/results_notebook.ipynb
+
+### Tests
+
+For each transformer function there is a test class which currently includes two tests. The first test creates a circuit and adds the left hand side of the identity that the transformer being tested implements. It then applies the transfomer to that circuit and checks if it outputs the correct circuit. The second test does the same but it adds the left hand side of the identity multiple times on random qubits.
+
+All test can be run by navigating to the root of the directory using command prompt and running "python -m unittest".
+
 # Installation
 
 <ol>
     <li>Make sure you have Python 3 installed and you are using an IDE that has Jupyter Notebook integration (author used VSCode).</li>
     <li>Clone the repository to your computer.</li>
     <li>Navigate to the root of the directory using command prompt and run install_venv.sh. This activates a virtual environment and installs all the needed dependencies.</li>
-    <li>If you want to use Jupyter Notebooks you need to select the virtual environment (named venv) as your kernel. In VSCode press ctrl + shift + p and select "Jupyter: Select Interpreter to Start Jupter Server" and choose venv. Next you can open a Jupter Notebook and in the top right corner click "Select Kernel" and choose venv. If you are using some other IDE Google is your friend.</li>
+    <li>If you want to use Jupyter Notebooks you need to select the virtual environment (named venv) as your kernel. If you are using VSCode, press ctrl + shift + p and select "Jupyter: Select Interpreter to Start Jupter Server" and choose venv. Next you can open a Jupter Notebook and in the top right corner click "Select Kernel" and choose venv. If you are using some other IDE Google is your friend.</li>
