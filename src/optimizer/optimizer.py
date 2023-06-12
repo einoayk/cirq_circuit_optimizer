@@ -3,8 +3,10 @@ import sys
 sys.path.append('../..')
 from src.transformers.transformers import (
     remove_double_hadamards,
-    combine_cnots, remove_double_cnots,
-    hadamards_and_cnot_to_cnot, cnot_to_hadamards_and_cnot, 
+    combine_cnots, 
+    remove_double_cnots,
+    hadamards_and_cnot_to_cnot, 
+    cnot_to_hadamards_and_cnot, 
     combine_cnots_with_controls_surrounded_by_hadamards
 )
 
