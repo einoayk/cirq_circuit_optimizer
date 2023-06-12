@@ -18,7 +18,6 @@ class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
         expected_circuit.append(cirq.H(qubits[4]))
         op = 1
         for i in range(4):
-
             op = op * cirq.X(qubits[i])
 
         op = op.controlled_by(qubits[4])
@@ -29,14 +28,13 @@ class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
 
     def test_multiple_instances(self):
         n_qubits = 7
-        n_instances = 4 # should smaller than n_qubits
+        n_instances = 4 # should be smaller than n_qubits
         assert n_qubits >= n_instances
         qubits = cirq.LineQubit.range(n_qubits)
         circuit = cirq.Circuit()
         expected_circuit = cirq.Circuit()        
         target_qubit_inds = random.sample([i for i in range(n_qubits)], n_instances)
         for target_qubit_ind in target_qubit_inds:
-
             n_control_qubits = random.randint(2, n_qubits-1)
             sampled_qubit_inds = [j for j in range(n_qubits) if j != target_qubit_ind]
             control_qubit_inds = random.sample(sampled_qubit_inds, k=n_control_qubits)

@@ -27,7 +27,6 @@ class TestHadamardsAndCnotToCnot(unittest.TestCase):
         circuit = cirq.Circuit()
         expected_circuit = cirq.Circuit()
         for i in range(n_instances):
-
             qubit1_ind, qubit2_ind = random.sample([j for j in range(n_qubits)], k=2)
             circuit.append([cirq.H(qubits[qubit1_ind]), cirq.H(qubits[qubit2_ind])])
             circuit.append(cirq.CNOT(qubits[qubit2_ind], qubits[qubit1_ind]))

@@ -15,7 +15,6 @@ class TestCombineCnots(unittest.TestCase):
         expected_circuit = cirq.Circuit()
         op = 1
         for i in range(1,5):
-
             op = op * cirq.X(qubits[i])
 
         op = op.controlled_by(qubits[0])
@@ -36,18 +35,15 @@ class TestCombineCnots(unittest.TestCase):
         op2 = 1
         op3 = 1
         for i in range(1,5):
-
             op1 = op1 * cirq.X(qubits[i])
 
         op1 = op1.controlled_by(qubits[0])
         op2 = op2 * cirq.X(qubits[0])
         for i in range(4, 7):
-
             op2 = op2 * cirq.X(qubits[i])
 
         op2 = op2.controlled_by(qubits[3])
         for i in range(5):
-
             op3 = op3 * cirq.X(qubits[i])
 
         op3 = op3.controlled_by(qubits[6])

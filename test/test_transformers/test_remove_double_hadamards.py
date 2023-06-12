@@ -7,7 +7,7 @@ from src.transformers.transformers import remove_double_hadamards
 
 class TestRemoveDoubleHadamards(unittest.TestCase):
 
-    def test_simple(self):
+    def test_one_instance(self):
         qubits = cirq.LineQubit.range(1)
         circuit = cirq.Circuit()
         circuit.append([cirq.H(qubits[0]) for i in range(2)])
@@ -20,7 +20,6 @@ class TestRemoveDoubleHadamards(unittest.TestCase):
         qubits = cirq.LineQubit.range(5)
         circuit = cirq.Circuit()
         for i in range(10):
-
             circuit = add_two_hadamards(circuit, qubits) 
 
         circuit = remove_double_hadamards(circuit)

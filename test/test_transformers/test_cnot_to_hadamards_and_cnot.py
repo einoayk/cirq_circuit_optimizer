@@ -26,7 +26,6 @@ class TestCnotToHadamardsAndCnot(unittest.TestCase):
         circuit = cnot_to_hadamards_and_cnot(circuit)
         expected_circuit = cirq.Circuit()
         for i in range(4):
-
             expected_circuit.append([cirq.H(qubits[i]), cirq.H(qubits[i+1])], strategy=InsertStrategy.INLINE)
             expected_circuit.append(cirq.CNOT(qubits[i+1], qubits[i]), strategy=InsertStrategy.INLINE)
             expected_circuit.append([cirq.H(qubits[i]), cirq.H(qubits[i+1])], strategy=InsertStrategy.INLINE)
