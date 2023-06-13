@@ -17,7 +17,7 @@ def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
     mutated_circuit = circuit.unfreeze(copy=True)
     insertions = []
     removals = []    
-    for first_cnot_ind in range(1,len(mutated_circuit)-1):        
+    for first_cnot_ind in range(1, len(mutated_circuit)-1):        
         for operation in mutated_circuit[first_cnot_ind].operations:
             if operation.gate != cirq.CNOT or (first_cnot_ind, operation) in removals:
                 continue
@@ -68,7 +68,8 @@ def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
                     new_h_operation = cirq.H(control_qubit)
                     if (prev_h_ind is None or 
                         new_h_operation not in mutated_circuit[prev_h_ind].operations or 
-                        (prev_h_ind, new_h_operation) in removals):
+                        (prev_h_ind, new_h_operation) in removals or
+                        prev_h_ind > first_cnot_ind):
                         continue
 
                     next_h_ind = mutated_circuit.next_moment_operating_on(qubits=[control_qubit],
@@ -165,17 +166,13 @@ def combine_cnots(circuit, context=None):
                 (moment_ind, operation) in removals):
                 continue
 
-            cnot_moment_inds = []
-            all_target_qubits = []
             potential_removals = []
             potential_target_qubits = []
-            potential_cnot_moment_inds = []
             control_qubit = operation.qubits[0]
             current_target_qubits = operation.qubits[1:]
-            potential_cnot_moment_inds.append(moment_ind)
             potential_target_qubits.extend(current_target_qubits)            
             potential_removals.append((moment_ind, operation))
-            new_removable_cnot_found = False 
+            new_removable_cnot_found = False
             cnot_ind = moment_ind   
             for i in range(len(mutated_circuit) - moment_ind):
                 if i > 0 and new_removable_cnot_found == False:
@@ -190,32 +187,36 @@ def combine_cnots(circuit, context=None):
                 for operation2 in mutated_circuit[cnot_ind].operations:
                     if ((operation2.gate != cirq.CNOT and 
                         is_cnot_with_multiple_targets(operation2) == False) or
-                        (cnot_ind, operation2) in removals):
+                        (cnot_ind, operation2) in removals or
+                        (cnot_ind, operation2) in potential_removals):
                         continue                    
                     
                     control_qubit_2 = operation2.qubits[0]
                     target_qubits_2 = operation2.qubits[1:]
                     if (control_qubit_2 != control_qubit or 
-                        lists_share_elements(target_qubits_2, all_target_qubits)):
+                        lists_share_elements(target_qubits_2, potential_target_qubits)):
+                        continue
+
+                    prev_moment_ind = mutated_circuit.prev_moment_operating_on(qubits=target_qubits_2, 
+                                                                               end_moment_index=cnot_ind)
+                    if prev_moment_ind is not None and prev_moment_ind >= moment_ind:
                         continue
 
                     new_removable_cnot_found = True
-                    potential_cnot_moment_inds.append(cnot_ind)
                     potential_target_qubits.extend(target_qubits_2)
                     potential_removals.append((cnot_ind, operation2))
                     break
 
             if len(potential_removals) <= 1:
-                break                
-                    
+                break           
+
             removals.extend(potential_removals)
-            all_target_qubits.extend(potential_target_qubits)
-            cnot_moment_inds.extend(potential_cnot_moment_inds)
-            cnot_with_multiple_targets = create_cnot_with_multiple_targets(target_qubits=all_target_qubits,
+            cnot_with_multiple_targets = create_cnot_with_multiple_targets(target_qubits=potential_target_qubits,
                                                                                 control_qubit=control_qubit)
             insertions.append((moment_ind, cnot_with_multiple_targets))
 
     if len(removals) != 0:
+        insertions.reverse()
         mutated_circuit.batch_remove(removals)
         mutated_circuit.batch_insert(insertions)
         mutated_circuit = cirq.drop_empty_moments(mutated_circuit)                    

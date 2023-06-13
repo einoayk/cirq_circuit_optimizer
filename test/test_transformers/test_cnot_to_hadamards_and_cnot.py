@@ -7,7 +7,7 @@ from src.transformers.transformers import cnot_to_hadamards_and_cnot
 
 class TestCnotToHadamardsAndCnot(unittest.TestCase):
 
-    def test_simple(self):
+    def test_one_instance(self):
         qubits = cirq.LineQubit.range(2)
         circuit = cirq.Circuit()
         circuit.append(cirq.CNOT(qubits[0], qubits[1]))           
