@@ -36,7 +36,7 @@ The transformers are implemented as functions in src/transformers/transformers.p
 
 ### Optimizer
 
-src/optimizer/optimizer.py includes a function called optimize which optimizes Cirq circuits. It creates multiple optimized circuits and outputs the best one (shortest). For each optimized circuit it randomly selects transformers with specified probability distributions and applies them on the circuit being optimized. The probability distribution for choosing the initial transformer is specified by initial_probs and after that the probability distributions are specified by a two dimensional array called transition_probs. It contains a row for each previously applied transformer containing the probability distribution for choosing the next one. Currently all the initial_probs and transition probs are equal, except the probability for choosing the same transformer two times in a row is zero. The next step could be finding out good probability distributions for the optimizer.  
+src/optimizer/optimizer.py includes a function called optimize which optimizes Cirq circuits. It creates multiple optimized circuits and outputs the best one (shortest). For each optimized circuit it randomly selects transformers with specified probability distributions and applies them on the circuit being optimized. The probability distribution for choosing the initial transformer is specified by initial_probs and after that the probability distributions are specified by a two dimensional array called transition_probs. It contains a row for each previously applied transformer containing the probability distribution for choosing the next one.   
 
 
 ### Results
@@ -45,7 +45,7 @@ See src/notebooks/results_notebook.ipynb
 
 ### Tests
 
-For each transformer function there is a test class which currently includes two tests. The first test creates a circuit and adds the left hand side of the identity that the transformer being tested implements. It then applies the transfomer to that circuit and checks if it outputs the correct circuit. The second test does the same but it adds the left hand side of the identity multiple times on random qubits.
+For each transformer function there is a test class which currently includes three tests. The first test creates a circuit and adds the left hand side of the identity that the transformer being tested implements. It then applies the transfomer to that circuit and checks if it outputs the correct circuit. The second test does the same but it adds the left hand side of the identity multiple times on random qubits. The third test creates a random circuit and applies to it the transformer that is being tested. It then checks if the effect of the outputted circuit and the original circuits have equivalent effects using Cirq's function assert_circuits_with_terminal_measurements_are_equivalent.
 
 All test can be run by navigating to the root of the directory using command prompt and running "python -m unittest".
 
