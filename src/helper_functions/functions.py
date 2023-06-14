@@ -25,10 +25,10 @@ def flat_probs_to_matrix(flatprobs):
        be a 6x6 matrix.
 
     Args:
-        flatprobs: list of probabilities
+        flatprobs (list(float)): list of probabilities
 
     Returns:
-        probs_matix: square matrix containing the input probabilities
+        probs_matix (list(list(float))): square matrix containing the input probabilities
                      with 0 on diagonal elements
 
     """
@@ -50,11 +50,11 @@ def create_cnot_with_multiple_targets(target_qubits, control_qubit):
     """Creates a multi-target-qubit Cirq CNOT operation
 
     Args: 
-        target_qubits: list[cirq.LineQubit]
-        control_qubit: cirq.LineQubit
+        target_qubits (list(cirq.LineQubit)): list of target qubits
+        control_qubit (cirq.LineQubit)
 
     Returns:
-        op: Cirq's ControlleOperation
+        op (Cirq's ControlleOperation): multi-target-qubit CNOT operation
 
     """
     op = 1

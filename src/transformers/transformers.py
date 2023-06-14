@@ -8,10 +8,12 @@ from src.helper_functions.functions import (
 )
 
 def all_equal(iterable):
+    """Checks if all values of an iterable are the same"""
     g = groupby(iterable)
     return next(g, True) and not next(g, False)
 
 def lists_share_elements(list1, list2):
+    """Checks if two lists share any elements"""
     return bool([i for i in list1 if i in list2])
 
 def map_cnot_to_cnot_and_hadamards(op, _: int):
@@ -28,8 +30,14 @@ def map_cnot_to_cnot_and_hadamards(op, _: int):
 
 @cirq.transformer
 def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
-    """
-    Implements template a) as a Cirq transformer
+    """Applies circuit identity a) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     insertions = []
@@ -124,8 +132,14 @@ def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
 
 @cirq.transformer
 def remove_double_hadamards(circuit, context=None):
-    """
-    Implements template b) as a Cirq transformer
+    """Applies circuit identity b) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
     """
     mutated_circuit = circuit.unfreeze(copy=True)    
     for moment_ind in range(len(mutated_circuit)-1):        
@@ -145,9 +159,15 @@ def remove_double_hadamards(circuit, context=None):
 
 @cirq.transformer
 def remove_double_cnots(circuit, context=None): 
-    """
-    Implements template c) as a Cirq transformer
-    """   
+    """Applies circuit identity c) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
+    """ 
     mutated_circuit = circuit.unfreeze(copy=True)    
     for moment_ind in range(len(mutated_circuit)-1):
         for operation in mutated_circuit[moment_ind].operations:
@@ -169,8 +189,14 @@ def remove_double_cnots(circuit, context=None):
 
 @cirq.transformer
 def combine_cnots(circuit, context=None):
-    """
-    Implements template d) as a Cirq transformer
+    """Applies circuit identity d) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     insertions = []
@@ -241,15 +267,27 @@ def combine_cnots(circuit, context=None):
 
 @cirq.transformer
 def cnot_to_hadamards_and_cnot(circuit, context=None):
-    """
-    Implements template e) as a Cirq transformer
+    """Applies circuit identity e) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
     """
     return cirq.map_operations_and_unroll(circuit, map_cnot_to_cnot_and_hadamards)
 
 @cirq.transformer
 def hadamards_and_cnot_to_cnot(circuit, context=None):
-    """
-    Implements template f) as a Cirq transformer
+    """Applies circuit identity f) to all locations of the circuit that permit it
+
+    Args:
+        circuit (cirq.Circuit): original circuit
+    
+    Returns:
+        mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
+
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     removals = [] 

@@ -55,7 +55,6 @@ def random_circuit(n_qubits, n_templates):
     qubits = cirq.LineQubit.range(n_qubits+1)
     circuit = cirq.Circuit()
     for i in range(n_templates):
-
         circuit = random.choice(function_list)(circuit, qubits)  
 
     return circuit
