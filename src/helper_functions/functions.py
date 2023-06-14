@@ -1,24 +1,4 @@
 import cirq
-from itertools import groupby
-
-def map_cnot_to_cnot_and_hadamards(op, _: int):
-    if op.gate == cirq.CNOT:
-        control_qubit = op.qubits[0]
-        target_qubit = op.qubits[1]
-        yield cirq.H(control_qubit)
-        yield cirq.H(target_qubit)
-        yield cirq.CNOT(target_qubit, control_qubit)
-        yield cirq.H(control_qubit)
-        yield cirq.H(target_qubit)
-    else:
-        yield op
-
-def all_equal(iterable):
-    g = groupby(iterable)
-    return next(g, True) and not next(g, False)
-
-def lists_share_elements(list1, list2):
-    return bool([i for i in list1 if i in list2])
 
 def is_cnot_with_multiple_targets(operation):
     if type(operation.gate) != cirq.ControlledGate:

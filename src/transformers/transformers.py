@@ -1,13 +1,30 @@
 import cirq
+from itertools import groupby
 import sys
 sys.path.append('../..')
 from src.helper_functions.functions import (
-    map_cnot_to_cnot_and_hadamards, 
-    all_equal, 
-    is_cnot_with_multiple_targets, 
-    lists_share_elements,
+    is_cnot_with_multiple_targets,
     create_cnot_with_multiple_targets
 )
+
+def all_equal(iterable):
+    g = groupby(iterable)
+    return next(g, True) and not next(g, False)
+
+def lists_share_elements(list1, list2):
+    return bool([i for i in list1 if i in list2])
+
+def map_cnot_to_cnot_and_hadamards(op, _: int):
+    if op.gate == cirq.CNOT:
+        control_qubit = op.qubits[0]
+        target_qubit = op.qubits[1]
+        yield cirq.H(control_qubit)
+        yield cirq.H(target_qubit)
+        yield cirq.CNOT(target_qubit, control_qubit)
+        yield cirq.H(control_qubit)
+        yield cirq.H(target_qubit)
+    else:
+        yield op
 
 @cirq.transformer
 def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
@@ -292,4 +309,3 @@ def hadamards_and_cnot_to_cnot(circuit, context=None):
     mutated_circuit.batch_replace(replacements)                                   
     mutated_circuit = cirq.drop_empty_moments(mutated_circuit)                                        
     return mutated_circuit
-
