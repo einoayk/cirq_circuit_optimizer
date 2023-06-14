@@ -1,6 +1,15 @@
 import cirq
 
 def is_cnot_with_multiple_targets(operation):
+    """Checks if a Cirq operation is a multi-target-qubit CNOT
+
+    Args:
+        operation: Cirq operation
+
+    Returns:
+        True if operation is multi-target-qubit CNOT
+        False if not    
+    """
     if type(operation.gate) != cirq.ControlledGate:
         return False
     
@@ -11,6 +20,18 @@ def is_cnot_with_multiple_targets(operation):
     return True
 
 def flat_probs_to_matrix(flatprobs):
+    """Creates a square matrix from vector values and adds 0 to
+       diagonal entries. Currently assumes that the result should
+       be a 6x6 matrix.
+
+    Args:
+        flatprobs: list of probabilities
+
+    Returns:
+        probs_matix: square matrix containing the input probabilities
+                     with 0 on diagonal elements
+
+    """
     probs_matrix = []
     for i in range(6):
         temp_list = []
@@ -26,6 +47,16 @@ def flat_probs_to_matrix(flatprobs):
     return probs_matrix
 
 def create_cnot_with_multiple_targets(target_qubits, control_qubit):
+    """Creates a multi-target-qubit Cirq CNOT operation
+
+    Args: 
+        target_qubits: list[cirq.LineQubit]
+        control_qubit: cirq.LineQubit
+
+    Returns:
+        op: Cirq's ControlleOperation
+
+    """
     op = 1
     for target_qubit in target_qubits:
         op *= cirq.X(target_qubit)
