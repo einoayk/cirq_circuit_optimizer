@@ -3,7 +3,6 @@ import cirq
 from src.generate_random_circuits.circuit_generator import add_two_cnots, random_circuit
 from src.transformers.transformers import remove_double_cnots
 
-
 class TestRemoveDoubleCnots(unittest.TestCase):
 
     def test_one_instance(self):

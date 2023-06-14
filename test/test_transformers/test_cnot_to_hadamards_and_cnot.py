@@ -1,7 +1,6 @@
 import unittest
 import cirq
 from cirq.circuits import InsertStrategy
-
 from src.generate_random_circuits.circuit_generator import random_circuit
 from src.transformers.transformers import cnot_to_hadamards_and_cnot
 

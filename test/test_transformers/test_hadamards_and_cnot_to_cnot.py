@@ -4,7 +4,6 @@ import random
 from src.generate_random_circuits.circuit_generator import random_circuit
 from src.transformers.transformers import hadamards_and_cnot_to_cnot
 
-
 class TestHadamardsAndCnotToCnot(unittest.TestCase):
 
     def test_one_instance(self):
