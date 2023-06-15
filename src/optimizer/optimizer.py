@@ -10,7 +10,7 @@ from src.transformers.transformers import (
     combine_cnots_with_controls_surrounded_by_hadamards
 )
 
-function_list = [
+_FUNCTION_LIST = [
     remove_double_hadamards, 
     combine_cnots, 
     remove_double_cnots,
@@ -38,12 +38,12 @@ def optimize(circuit, initial_probs, transition_probs, n_iter=50, n_opt_circuits
     opt_circuits = [None] * n_opt_circuits
     for circ_ind in range(n_opt_circuits):
         opt_circuit = circuit.unfreeze(copy=True)
-        function_ind = random.choices([i for i in range(6)],  weights=initial_probs)[0]
-        opt_circuit = function_list[function_ind](opt_circuit)
+        function_ind = random.choices([i for i in range(len(_FUNCTION_LIST))],  weights=initial_probs)[0]
+        opt_circuit = _FUNCTION_LIST[function_ind](opt_circuit)
         for i in range(n_iter):
-            function_inds_list = [j for j in range(6)]              
+            function_inds_list = [j for j in range(len(_FUNCTION_LIST))]              
             function_ind = random.choices(function_inds_list,  weights=transition_probs[function_ind])[0]
-            opt_circuit = function_list[function_ind](opt_circuit)
+            opt_circuit = _FUNCTION_LIST[function_ind](opt_circuit)
 
         opt_circuits[circ_ind] = opt_circuit
 
