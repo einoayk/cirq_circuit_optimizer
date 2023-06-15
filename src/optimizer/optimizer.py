@@ -20,8 +20,20 @@ function_list = [
 ]
 
 def optimize(circuit, initial_probs, transition_probs, n_iter=50, n_opt_circuits=20):
-    """
-    Cirq circuit optimizer
+    """Cirq circuit optimizer. Makes multiple copies of the original circuit, randomly 
+    applies the circuit identities specified in the problem description on the circuits
+    and outputs the shortest one.
+
+    Args:
+        cirucit (cirq.Circuit): circuit that is optimized
+        initial_probs (lis(float)): probability distribution for choosing the first transformer
+        transition_probs (lis(lis(float))): probability distribution for choosing next transformer
+                                            depending on which transformer was previously applied.
+        n_iter (int): how many transformers are applied to a single circuit
+        n_opt_circuits (int): how many copies of the original circuit are optimized.
+
+    Returns:
+        best_opt_circuit (cirq.Circuit): the shortest optimized circuit
     """
     opt_circuits = [None] * n_opt_circuits
     for circ_ind in range(n_opt_circuits):
