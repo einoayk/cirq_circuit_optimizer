@@ -7,16 +7,20 @@ from src.helper_functions.functions import (
     create_cnot_with_multiple_targets
 )
 
-def all_equal(iterable):
+def _all_equal(iterable):
     """Checks if all values of an iterable are the same"""
     g = groupby(iterable)
     return next(g, True) and not next(g, False)
 
-def lists_share_elements(list1, list2):
+def _lists_share_elements(list1, list2):
     """Checks if two lists share any elements"""
     return bool([i for i in list1 if i in list2])
 
-def map_cnot_to_cnot_and_hadamards(op, _: int):
+def _map_cnot_to_cnot_and_hadamards(op, _: int):
+    """Inverts CNOT-gate and adds Hadamard- 
+    gates on both qubits before and afther 
+    the CNOT (identity e of project description)
+    """
     if op.gate == cirq.CNOT:
         control_qubit = op.qubits[0]
         target_qubit = op.qubits[1]
@@ -177,7 +181,7 @@ def remove_double_cnots(circuit, context=None):
             control_qubit = operation.qubits[0]
             moment_inds_2 = mutated_circuit.next_moments_operating_on(qubits=operation.qubits,
                                                                       start_moment_index=moment_ind+1)            
-            if (all_equal(moment_inds_2.values()) and 
+            if (_all_equal(moment_inds_2.values()) and 
                 moment_inds_2[control_qubit] != len(mutated_circuit) and 
                 operation in mutated_circuit[moment_inds_2[control_qubit]]):
 
@@ -237,7 +241,7 @@ def combine_cnots(circuit, context=None):
                     control_qubit_2 = operation2.qubits[0]
                     target_qubits_2 = operation2.qubits[1:]
                     if (control_qubit_2 != control_qubit or 
-                        lists_share_elements(target_qubits_2, potential_target_qubits)):
+                        _lists_share_elements(target_qubits_2, potential_target_qubits)):
                         continue
 
                     prev_moment_ind = mutated_circuit.prev_moment_operating_on(qubits=target_qubits_2, 
@@ -276,7 +280,7 @@ def cnot_to_hadamards_and_cnot(circuit, context=None):
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
 
     """
-    return cirq.map_operations_and_unroll(circuit, map_cnot_to_cnot_and_hadamards)
+    return cirq.map_operations_and_unroll(circuit, _map_cnot_to_cnot_and_hadamards)
 
 @cirq.transformer
 def hadamards_and_cnot_to_cnot(circuit, context=None):
