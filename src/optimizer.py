@@ -1,7 +1,7 @@
 import random
 import sys
-sys.path.append('../..')
-from src.transformers.transformers import (
+sys.path.append('../')
+from src.transformers import (
     remove_double_hadamards,
     combine_cnots, 
     remove_double_cnots,

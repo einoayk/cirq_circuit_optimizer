@@ -2,8 +2,8 @@ import unittest
 import cirq
 from cirq.circuits import InsertStrategy
 import random
-from src.generate_random_circuits.circuit_generator import random_circuit
-from src.transformers.transformers import combine_cnots_with_controls_surrounded_by_hadamards
+from src.random_circuit_generator import random_circuit
+from src.transformers import combine_cnots_with_controls_surrounded_by_hadamards
 
 class TestCombineCnotsWithControlsSurroundedByHadamards(unittest.TestCase):
 

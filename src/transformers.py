@@ -1,8 +1,8 @@
 import cirq
 from itertools import groupby
 import sys
-sys.path.append('../..')
-from src.helper_functions.functions import (
+sys.path.append('../')
+from src.functions import (
     is_cnot_with_multiple_targets,
     create_cnot_with_multiple_targets
 )

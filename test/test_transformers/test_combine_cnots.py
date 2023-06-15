@@ -1,7 +1,7 @@
 import unittest
 import cirq
-from src.generate_random_circuits.circuit_generator import random_circuit
-from src.transformers.transformers import combine_cnots
+from src.random_circuit_generator import random_circuit
+from src.transformers import combine_cnots
 
 class TestCombineCnots(unittest.TestCase):
 

@@ -1,7 +1,7 @@
 import unittest
 import cirq
-from src.generate_random_circuits.circuit_generator import add_two_cnots, random_circuit
-from src.transformers.transformers import remove_double_cnots
+from src.random_circuit_generator import add_two_cnots, random_circuit
+from src.transformers import remove_double_cnots
 
 class TestRemoveDoubleCnots(unittest.TestCase):
 
