@@ -112,7 +112,7 @@ def add_hadamards_and_cnots_with_different_targets(circuit, qubits):
     mutated_circuit.append(hadamard_list)
     return mutated_circuit
 
-def random_circuit(n_qubits, n_templates):
+def create_random_circuit(n_qubits, n_templates):
     """Creates a Cirq circuit and adds multiple randomly chosen
     templates (left hand sides of the circuit identities) by 
     calling the functions definied above.
