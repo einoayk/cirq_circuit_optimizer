@@ -28,7 +28,7 @@ Note that the templates above are invariant to qubit permutations or orderings. 
 
 ### Generating random circuits
 
-src/generate_random_circuits/circuit_generator.py includes a function called random_circuit which takes as input the number of qubits (n_qubits) and the number of random templates added to the circuit (n_templates). The templates are the circuits on the left hand side of the circuit identities in the problem statement. The function creates a Cirq circuit with the specified number of qubits and for the specified number of times it selects one of the templates at random and appends it to the end of the circuit. The qubits that are acted on in each new template are chosen randomly. Also the number of CNOT-gates in template a and d are randomly chosen.
+src/random_circuit_generator.py includes a function called create_random_circuit which takes as input the number of qubits (n_qubits) and the number of random templates added to the circuit (n_templates). The templates are the circuits on the left hand side of the circuit identities in the problem statement. The function creates a Cirq circuit with the specified number of qubits and for the specified number of times it selects one of the templates at random and appends it to the end of the circuit. The qubits that are acted on in each new template are chosen randomly. Also the number of CNOT-gates in template a and d are randomly chosen.
 
 ### Transformers
 
@@ -36,7 +36,7 @@ The transformers are implemented as functions in src/transformers/transformers.p
 
 ### Optimizer
 
-src/optimizer/optimizer.py includes a function called optimize which optimizes Cirq circuits. It creates multiple optimized circuits and outputs the best one (shortest). For each optimized circuit it randomly selects transformers with specified probability distributions and applies them on the circuit being optimized. The probability distribution for choosing the initial transformer is specified by initial_probs and after that the probability distributions are specified by a two dimensional array called transition_probs. It contains a row for each previously applied transformer containing the probability distribution for choosing the next one.   
+src/optimizer.py includes a function called optimize which optimizes Cirq circuits. It creates multiple optimized circuits and outputs the best one (shortest). For each optimized circuit it randomly selects transformers with specified probability distributions and applies them on the circuit being optimized. The probability distribution for choosing the initial transformer is specified by initial_probs and after that the probability distributions are specified by a two dimensional array called transition_probs. It contains a row for each previously applied transformer containing the probability distribution for choosing the next one.   
 
 
 ### Results
