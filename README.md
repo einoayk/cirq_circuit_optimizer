@@ -5,11 +5,11 @@
 Quantum circuit optimisation using template-based rewrite rules is widely used in quantum circuit software (e.g. Google Cirq, IBM Qiskit). An input circuit is gradually transformed by applying quantum gate identities until a given optimization criterion is met. The gate set and the size of the input circuits influence the performance of the procedure. The number of permitted transformations blows up the size of the optimisation search space. Consequently, although this kind of optimisation performs well, it is challenging to improve its scaling.
 The goal of this project is to implement a set of functionalities (which we will call transformers) that apply a given set of template-based rewrite rules to randomly generated quantum circuits in all locations of the circuit that permit it. There should be six circuit transformers in total, one for each of the following circuit identities:
 
-![Alt text](images/image.png)
+![Alt text](images/circuit_identity_image1.png)
 
 Note that the templates above are invariant to qubit permutations or orderings. For example, transformers should be effective for these cases also:
 
-![Alt text](images/image-1.png)
+![Alt text](images/circuit_identity_image2.png)
 
 **Goals**:
 <ol type="A">
