@@ -32,7 +32,7 @@ src/random_circuit_generator.py includes a function called create_random_circuit
 
 ### Transformers
 
-The transformers are implemented as functions in src/transformers/transformers.py. Link to the Cirq transformer documentation: https://quantumai.google/cirq/transform/custom_transformers
+The transformers are implemented as functions in src/transformers.py. Link to the Cirq transformer documentation: https://quantumai.google/cirq/transform/custom_transformers
 
 ### Optimizer
 
