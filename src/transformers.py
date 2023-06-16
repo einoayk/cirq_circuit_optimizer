@@ -18,7 +18,7 @@ def _lists_share_elements(list1, list2):
 
 def _map_cnot_to_cnot_and_hadamards(op, _: int):
     """Inverts CNOT-gate and adds Hadamard- 
-    gates on both qubits before and afther 
+    gates on both qubits before and after 
     the CNOT (identity e of project description)
     """
     if op.gate == cirq.CNOT:
@@ -41,7 +41,6 @@ def combine_cnots_with_controls_surrounded_by_hadamards(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     insertions = []
@@ -143,21 +142,24 @@ def remove_double_hadamards(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """
-    mutated_circuit = circuit.unfreeze(copy=True)    
+    mutated_circuit = circuit.unfreeze(copy=True)
+    removals = []    
     for moment_ind in range(len(mutated_circuit)-1):        
         for operation in mutated_circuit[moment_ind].operations:            
-            if operation.gate != cirq.H:
+            if (operation.gate != cirq.H or 
+               (moment_ind, operation) in removals):
                 continue
                 
             qubit = operation.qubits[0]
             moment_ind_2 = mutated_circuit.next_moment_operating_on(qubits=[qubit],
                                                                     start_moment_index=moment_ind+1)                
-            if moment_ind_2 is not None and operation in mutated_circuit[moment_ind_2]:
-                removals = [(moment_ind, operation), (moment_ind_2, operation)]
-                mutated_circuit.batch_remove(removals)
+            if (moment_ind_2 is not None and 
+                operation in mutated_circuit[moment_ind_2] and
+                (moment_ind_2, operation) not in removals):
+                removals.extend([(moment_ind, operation), (moment_ind_2, operation)])
                     
+    mutated_circuit.batch_remove(removals)
     mutated_circuit = cirq.drop_empty_moments(mutated_circuit)                        
     return mutated_circuit
 
@@ -170,12 +172,14 @@ def remove_double_cnots(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """ 
-    mutated_circuit = circuit.unfreeze(copy=True)    
+    mutated_circuit = circuit.unfreeze(copy=True)
+    removals = []    
     for moment_ind in range(len(mutated_circuit)-1):
         for operation in mutated_circuit[moment_ind].operations:
-            if operation.gate != cirq.CNOT and is_cnot_with_multiple_targets(operation) == False:
+            if ((operation.gate != cirq.CNOT 
+                and is_cnot_with_multiple_targets(operation) == False) or
+                (moment_ind, operation) in removals):
                 continue
                 
             control_qubit = operation.qubits[0]
@@ -183,11 +187,11 @@ def remove_double_cnots(circuit, context=None):
                                                                       start_moment_index=moment_ind+1)            
             if (_all_equal(moment_inds_2.values()) and 
                 moment_inds_2[control_qubit] != len(mutated_circuit) and 
-                operation in mutated_circuit[moment_inds_2[control_qubit]]):
-
-                removals = [(moment_ind, operation), (moment_inds_2[control_qubit], operation)]
-                mutated_circuit.batch_remove(removals)
-                    
+                operation in mutated_circuit[moment_inds_2[control_qubit]] and
+                (moment_inds_2[control_qubit], operation) not in removals):
+                removals.extend([(moment_ind, operation), (moment_inds_2[control_qubit], operation)])
+                
+    mutated_circuit.batch_remove(removals)                
     mutated_circuit = cirq.drop_empty_moments(mutated_circuit)                        
     return mutated_circuit
 
@@ -200,7 +204,6 @@ def combine_cnots(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     insertions = []
@@ -278,7 +281,6 @@ def cnot_to_hadamards_and_cnot(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """
     return cirq.map_operations_and_unroll(circuit, _map_cnot_to_cnot_and_hadamards)
 
@@ -291,7 +293,6 @@ def hadamards_and_cnot_to_cnot(circuit, context=None):
     
     Returns:
         mutated_circuit (cirq.Circuit): circuit gotten by applying the identity
-
     """
     mutated_circuit = circuit.unfreeze(copy=True)
     removals = [] 
